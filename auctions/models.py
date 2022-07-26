@@ -14,6 +14,7 @@ class Listing(models.Model):
     price = models.IntegerField(blank = False)
     bid = models.ManyToManyField(Bid, blank = True, related_name = "bid")
     category_choices = [
+        ('NON', ''),
         ('FAS', 'Fashion'),
         ('TOY', 'Toys'),
         ('ELC', 'Electronics'),

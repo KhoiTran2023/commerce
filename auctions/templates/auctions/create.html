@@ -1,0 +1,28 @@
+{% extends 'auctions/layout.html' %}
+
+{% block body %}
+{% if messages %}
+    {% for message in messages %}
+        {message}
+    {% endfor %}
+{% endif %}
+<form action = "{% url 'create' %}" method = "post" id = "createForm">
+    {% csrf_token %}
+    <input name = title type = text placeholder = Title required>
+    <label for = "bid">Starting Bid</label>
+    <input name = bid type = number required>
+    <input name = imgurl type = text placeholder = "Image URL">
+    <select name = "category">
+        <option value = "NON">--Select--</option>
+        <option value = "FAS">Fashion</option>
+        <option value = "TOY">Toys</option>
+        <option value = "ELC">Electronics</option>
+        <option value = "HOM">Home</option>
+        <option value = "CAR">Cars</option>
+    </select>
+    <button>Submit</button>
+</form>
+
+<textarea form = "createForm" name = "description"></textarea>
+
+{% endblock %}
