@@ -74,10 +74,19 @@ def create(request):
     return render(request, "auctions/create.html")
 
 def categories(request):
-    return
+    return render(request, "auctions/categories.html")
+
+def category(request, category_id):
+    listings = Listing.objects.filter(category = category_id).all()
+    return render(request, "auctions/category.html", context = {
+        "listings":listings,
+    })
 
 def watchlist(request):
     return
 
 def viewListing(request, listing_id):
-    return
+    listing = Listing.objects.get(id = listing_id)
+    return render(request, "auctions/individualListing.html", context = {
+        "listing":listing
+    })
