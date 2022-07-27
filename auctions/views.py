@@ -68,7 +68,7 @@ def register(request):
 
 def create(request):
     if request.method == "POST":
-        newListing = Listing(title = request.POST["title"], description = request.POST["description"], price = request.POST["bid"], category = request.POST["category"], img_url = request.POST["imgurl"], lister = request.user)
+        newListing = Listing(title = request.POST["title"], description = request.POST["description"], price = request.POST["bid"], category = request.POST["category"], img_url = request.POST["imgurl"])
         newListing.save()
         messages.success(request, "Listing created successfully")
     return render(request, "auctions/create.html")
@@ -83,7 +83,15 @@ def category(request, category_id):
     })
 
 def watchlist(request):
-    return
+    watchedListings = request.user.watchlist.all()
+    return render(request, "auctions/watchlist.html", context = {
+        "listings":watchedListings
+    })
+
+def watch(request, listing_id):
+    f = Listing.objects.get(id = listing_id)
+    request.user.watchlist.add(f)
+    return HttpResponseRedirect(reverse("index"))
 
 def viewListing(request, listing_id):
     listing = Listing.objects.get(id = listing_id)

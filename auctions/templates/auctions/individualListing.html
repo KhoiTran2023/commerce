@@ -2,4 +2,5 @@
 
 {% block body %}
     {{listing.title}}
+    <a href = "{% url 'watch' listing.id %}">Watch</a>
 {% endblock %}
