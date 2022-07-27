@@ -95,6 +95,10 @@ def watch(request, listing_id):
 
 def viewListing(request, listing_id):
     listing = Listing.objects.get(id = listing_id)
+    user = listing.user_listing
+    comments = Comment.objects.filter(listing__id=listing_id).all()
     return render(request, "auctions/individualListing.html", context = {
-        "listing":listing
+        "listing":listing,
+        "comments":comments,
+        "user_listing":user
     })

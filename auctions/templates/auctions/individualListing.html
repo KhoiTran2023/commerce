@@ -1,6 +1,18 @@
 {% extends 'auctions/layout.html' %}
 
 {% block body %}
-    {{listing.title}}
-    <a href = "{% url 'watch' listing.id %}">Watch</a>
+<div class = "box">
+    <h1>{{listing.title}}</h1>
+    <h2>Listed by {{user}}</h2>
+    {% if user.is_authenticated %}
+        <a href = "{% url 'watch' listing.id %}">Watch</a>
+    {% endif %}
+
+    <div>
+        <img src = "{{listing.img_url}}" alt = "No Image Provided"/>
+    </div>
+    {% for comment in comments %}
+        <div>{{comment.description}}</div>
+    {% endfor %}
+</div>
 {% endblock %}
