@@ -93,6 +93,8 @@ def watchlist(request):
 
 def watch(request, listing_id):
     f = Listing.objects.get(id = listing_id)
+    if request.user.watchlist.filter(id=listing_id).exists():
+        return "gay"
     request.user.watchlist.add(f)
     return HttpResponseRedirect(reverse("index"))
 
