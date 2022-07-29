@@ -117,3 +117,12 @@ def comment(request, listing_id):
         f.save()
         return viewListing(request, listing_id)
     return index(request)
+
+def bid(request, listing_id):
+    if request.method == "POST":
+        if int(request.POST["bid"])<=Bid.objects.filter(bid__id=listing_id).latest('id').price:
+            messages.error(request, "Bid amount must be greater than previous bid.")
+            return HttpResponseRedirect(reverse("view_listing", kwargs = {'listing_id':listing_id}))
+        f = Bid(price = request.POST["bid"], bidder = request.user, bid = Listing.objects.get(id=listing_id))
+        f.save()
+        return HttpResponseRedirect(reverse("view_listing", kwargs = {'listing_id':listing_id}))

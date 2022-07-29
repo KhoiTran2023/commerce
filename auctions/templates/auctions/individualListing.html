@@ -2,9 +2,20 @@
 
 {% block body %}
 <div class = "box">
+    {% if messages %}
+        {% for message in messages %}
+            <strong>{{message}}</strong>
+        {% endfor %}
+    {% endif %}
     <h1>{{listing.title}}</h1>
     <h2>Listed by {{user}}</h2>
-        <h2>${{price.price}}</h2>   
+        <h2>${{price.price}}</h2>
+        <form action = "{% url 'bid' listing.id %}" method = "POST">
+            {% csrf_token %}
+            <label for = "bid">Place a bid higher than ${{price.price}}</label>
+            <input name = "bid" type = "number" placeholder = "{{price.price}}">
+            <button>Place Bid</button>
+        </form>
 
     <p>{{listing.description}}</p>
     {% if user.is_authenticated %}
@@ -14,11 +25,14 @@
     <div>
         <img src = "{{listing.img_url}}" alt = "No Image Provided"/>
     </div>
+    {% if user.us_authenticated %}
     <form action = "{% url 'comment' listing.id %}" method = "POST">
         {% csrf_token %}
         <input name = "comment" type = "text" placeholder = "leave a comment here!">
         <button>Comment</button>
     </form>
+    {% endif %}
+    <h3>Comments</h3>
     {% for comment in comments %}
         <strong>{{comment.commentator}}</strong>
         <div>{{comment.description}}</div>
