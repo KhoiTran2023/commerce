@@ -27,10 +27,10 @@ class User(AbstractUser):
 class Bid(models.Model):
     price = models.IntegerField()
     bidder = models.ForeignKey(User, null = False, on_delete = models.CASCADE, related_name = "bidder")
-    bid = models.ManyToManyField(Listing, blank = True, related_name = "listing_bid")
+    bid = models.ForeignKey(Listing, null = True, blank = True, related_name = "listing_bid", on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"Bidder: {self.bidder} at ${self.price} for {self.bid.title}"
+        return f"Bidder: {self.bidder} at ${self.price} for {self.bid}"
 
 class Comment(models.Model):
     listing = models.ForeignKey(Listing, null = False, on_delete=models.CASCADE, related_name = "listing")

@@ -4,6 +4,9 @@
 <div class = "box">
     <h1>{{listing.title}}</h1>
     <h2>Listed by {{user}}</h2>
+        <h2>${{price.price}}</h2>   
+
+    <p>{{listing.description}}</p>
     {% if user.is_authenticated %}
         <a href = "{% url 'watch' listing.id %}">Watch</a>
     {% endif %}
@@ -11,7 +14,13 @@
     <div>
         <img src = "{{listing.img_url}}" alt = "No Image Provided"/>
     </div>
+    <form action = "{% url 'comment' listing.id %}" method = "POST">
+        {% csrf_token %}
+        <input name = "comment" type = "text" placeholder = "leave a comment here!">
+        <button>Comment</button>
+    </form>
     {% for comment in comments %}
+        <strong>{{comment.commentator}}</strong>
         <div>{{comment.description}}</div>
     {% endfor %}
 </div>

@@ -70,6 +70,9 @@ def create(request):
     if request.method == "POST":
         newListing = Listing(title = request.POST["title"], description = request.POST["description"], price = request.POST["bid"], category = request.POST["category"], img_url = request.POST["imgurl"])
         newListing.save()
+        f = Bid(price = request.POST["bid"],bidder = request.user)
+        f.save()
+        f.bid.add(newListing)
         messages.success(request, "Listing created successfully")
     return render(request, "auctions/create.html")
 
@@ -97,8 +100,17 @@ def viewListing(request, listing_id):
     listing = Listing.objects.get(id = listing_id)
     user = listing.user_listing
     comments = Comment.objects.filter(listing__id=listing_id).all()
+    price=Bid.objects.filter(bid__id=listing_id).latest('id')
     return render(request, "auctions/individualListing.html", context = {
         "listing":listing,
         "comments":comments,
-        "user_listing":user
+        "user_listing":user,
+        "price":price,
     })
+
+def comment(request, listing_id):
+    if request.method == "POST":
+        f = Comment(description = request.POST["comment"], commentator = request.user, listing = Listing.objects.get(id=listing_id))
+        f.save()
+        return viewListing(request, listing_id)
+    return index(request)
