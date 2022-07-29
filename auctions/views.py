@@ -72,7 +72,7 @@ def create(request):
         newListing.save()
         f = Bid(price = request.POST["bid"],bidder = request.user)
         f.save()
-        f.bid.add(newListing)
+        f.listing_bid = newListing
         messages.success(request, "Listing created successfully")
     return render(request, "auctions/create.html")
 
@@ -104,11 +104,15 @@ def viewListing(request, listing_id):
     user = listing.user_listing
     comments = Comment.objects.filter(listing__id=listing_id).all()
     price=Bid.objects.filter(bid__id=listing_id).latest('id')
+    closed = listing.closed
+    if not closed and price.bidder == request.user:
+        messages.success(request, "Congratulations! You won the auction!")
     return render(request, "auctions/individualListing.html", context = {
         "listing":listing,
         "comments":comments,
         "user_listing":user,
         "price":price,
+        "closed":closed,
     })
 
 def comment(request, listing_id):
@@ -126,3 +130,9 @@ def bid(request, listing_id):
         f = Bid(price = request.POST["bid"], bidder = request.user, bid = Listing.objects.get(id=listing_id))
         f.save()
         return HttpResponseRedirect(reverse("view_listing", kwargs = {'listing_id':listing_id}))
+
+def close(request, listing_id):
+    if request.method == "POST":
+        Listing.objects.get(id=listing_id).closed = True
+        return HttpResponseRedirect(reverse("view_listing", kwargs = {'listing_id':listing_id}))
+    return HttpResponseRedirect(reverse("view_listing", kwargs = {'listing_id':listing_id}))

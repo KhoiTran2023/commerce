@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.forms import BooleanField
 
 
 class Listing(models.Model):
@@ -16,6 +17,7 @@ class Listing(models.Model):
     ]
     category = models.CharField(max_length=3, choices = category_choices, blank = True)
     img_url = models.TextField(blank = True)
+    closed =models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.title}: {self.price}, category: {self.category}"

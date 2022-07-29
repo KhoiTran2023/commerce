@@ -10,22 +10,34 @@
     <h1>{{listing.title}}</h1>
     <h2>Listed by {{user}}</h2>
         <h2>${{price.price}}</h2>
-        <form action = "{% url 'bid' listing.id %}" method = "POST">
-            {% csrf_token %}
-            <label for = "bid">Place a bid higher than ${{price.price}}</label>
-            <input name = "bid" type = "number" placeholder = "{{price.price}}">
-            <button>Place Bid</button>
-        </form>
+        {% if user.is_authenticated %}
+            {% if closed %}
+                <form action = "{% url 'bid' listing.id %}" method = "POST">
+                    {% csrf_token %}
+                        <label for = "bid">Place a bid higher than ${{price.price}} from {{price.bidder}}</label><br>
+                        <input name = "bid" type = "number" placeholder = "{{price.price}}">
+                        <button>Place Bid</button>
+                </form>
+        {% if request.user == user %}
+            <form action = "{% url 'close' listing.id %}" method = "POST">
+                {% csrf_token %}
+                <button>Close Auction</button>
+            </form>
+        {% endif %}
+        {% endif %}
+        {% if not closed %}
+        <strong>This auction has been closed.</strong>
+        {% endif %}
 
     <p>{{listing.description}}</p>
-    {% if user.is_authenticated %}
+    
         <a href = "{% url 'watch' listing.id %}">Watch</a>
     {% endif %}
 
     <div>
         <img src = "{{listing.img_url}}" alt = "No Image Provided"/>
     </div>
-    {% if user.us_authenticated %}
+    {% if user.is_authenticated %}
     <form action = "{% url 'comment' listing.id %}" method = "POST">
         {% csrf_token %}
         <input name = "comment" type = "text" placeholder = "leave a comment here!">
