@@ -18,7 +18,7 @@
                         <input name = "bid" type = "number" placeholder = "{{price.price}}">
                         <button>Place Bid</button>
                 </form>
-        {% if request.user == u %}
+        {% if request.user == user_listing.bidder %}
             <form action = "{% url 'close' listing.id %}" method = "POST">
                 {% csrf_token %}
                 <button>Close Auction</button>
