@@ -12,6 +12,7 @@ def index(request):
     listings = Listing.objects.all()
     return render(request, "auctions/index.html", context = {
         "listings":listings,
+        "msg":"Active Listings"
     })
 
 
@@ -83,12 +84,14 @@ def category(request, category_id):
     listings = Listing.objects.filter(category = category_id).all()
     return render(request, "auctions/index.html", context = {
         "listings":listings,
+        "msg":"Category Listings",
     })
 
 def watchlist(request):
     watchedListings = request.user.watchlist.all()
-    return render(request, "auctions/watchlist.html", context = {
-        "listings":watchedListings
+    return render(request, "auctions/index.html", context = {
+        "listings":watchedListings,
+        "msg":"Watchlist"
     })
 
 def watch(request, listing_id):

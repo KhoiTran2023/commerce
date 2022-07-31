@@ -16,7 +16,7 @@
         flex-direction:column;
     }
 </style>
-    <h2>Active Listings</h2>
+    <h2>{{msg}}</h2>
 <div class = "flex-container">
     {% for listing in listings %}
         {% if listing.closed is not closed %}
