@@ -81,7 +81,7 @@ def categories(request):
 
 def category(request, category_id):
     listings = Listing.objects.filter(category = category_id).all()
-    return render(request, "auctions/category.html", context = {
+    return render(request, "auctions/index.html", context = {
         "listings":listings,
     })
 
@@ -103,7 +103,7 @@ def viewListing(request, listing_id):
     listing = Listing.objects.get(id = listing_id)
     u = Bid.objects.filter(bid__id = listing_id).earliest('id')
     comments = Comment.objects.filter(listing__id=listing_id).all()
-    price=Bid.objects.filter(bid__id=listing_id).latest('id')
+    price = Bid.objects.filter(bid__id=listing_id).latest('id')
     closed = listing.closed
     if closed and price.bidder == request.user:
         messages.success(request, "Congratulations! You won the auction!")
@@ -129,6 +129,9 @@ def bid(request, listing_id):
             return HttpResponseRedirect(reverse("view_listing", kwargs = {'listing_id':listing_id}))
         f = Bid(price = request.POST["bid"], bidder = request.user, bid = Listing.objects.get(id=listing_id))
         f.save()
+        a = Listing.objects.get(id=listing_id)
+        a.price = request.POST["bid"]
+        a.save()
         return HttpResponseRedirect(reverse("view_listing", kwargs = {'listing_id':listing_id}))
 
 def close(request, listing_id):

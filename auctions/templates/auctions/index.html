@@ -1,12 +1,33 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
 
+<style>
+    .flex-container {
+        display:flex;
+        flex-direction:column;
+        gap:20px;
+    }
+
+    .flex-box {
+        border:2px solid black;
+        padding:20px;
+        display:flex;
+        flex-direction:column;
+    }
+</style>
+    <h2>Active Listings</h2>
+<div class = "flex-container">
     {% for listing in listings %}
         {% if listing.closed is not closed %}
-            <a href = "{% url 'view_listing' listing.id %}">{{listing.title}}</a>
+        <div class = "flex-box">
+            <a style = "font-size:20px;"href = "{% url 'view_listing' listing.id %}">{{listing.title}}</a>
+            <h6>${{listing.price}}</h4>
+            <img src = "{{ listing.img_url}}" alt = "No image provided" width = 50%>
+            <br>
+            <p>{{listing.description}}</p>
+        </div>
         {% endif %}
     {% endfor %}
-
+</div>
 {% endblock %}
