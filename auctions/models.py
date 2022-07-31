@@ -23,8 +23,8 @@ class Listing(models.Model):
         return f"{self.title}: {self.price}, category: {self.category}"
 
 class User(AbstractUser):
-    watchlist = models.ManyToManyField(Listing, blank = True, related_name = "watched")
-    listing = models.ForeignKey(Listing, null = True,blank = True, on_delete = models.CASCADE, related_name = "user_listing")
+    watchlist = models.ManyToManyField(Listing, blank = True, null = True, related_name = "watched")
+    listing = models.ManyToManyField(Listing, null = True,blank = True,)
 
 class Bid(models.Model):
     price = models.IntegerField()

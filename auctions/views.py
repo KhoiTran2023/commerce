@@ -70,9 +70,9 @@ def create(request):
     if request.method == "POST":
         newListing = Listing(title = request.POST["title"], description = request.POST["description"], price = request.POST["bid"], category = request.POST["category"], img_url = request.POST["imgurl"])
         newListing.save()
-        f = Bid(price = request.POST["bid"],bidder = request.user)
+        request.user.listing.add(newListing)
+        f = Bid(price = request.POST["bid"],bidder = request.user, bid = newListing)
         f.save()
-        f.listing_bid = newListing
         messages.success(request, "Listing created successfully")
     return render(request, "auctions/create.html")
 
@@ -101,16 +101,16 @@ def watch(request, listing_id):
 
 def viewListing(request, listing_id):
     listing = Listing.objects.get(id = listing_id)
-    user = listing.user_listing
+    u = Bid.objects.filter(bid__id = listing_id).earliest('id')
     comments = Comment.objects.filter(listing__id=listing_id).all()
     price=Bid.objects.filter(bid__id=listing_id).latest('id')
     closed = listing.closed
-    if not closed and price.bidder == request.user:
+    if closed and price.bidder == request.user:
         messages.success(request, "Congratulations! You won the auction!")
     return render(request, "auctions/individualListing.html", context = {
         "listing":listing,
         "comments":comments,
-        "user_listing":user,
+        "user_listing":u,
         "price":price,
         "closed":closed,
     })

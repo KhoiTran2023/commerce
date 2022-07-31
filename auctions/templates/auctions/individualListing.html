@@ -8,24 +8,24 @@
         {% endfor %}
     {% endif %}
     <h1>{{listing.title}}</h1>
-    <h2>Listed by {{user}}</h2>
+    <h2>Listed by {{user_listing.bidder}}</h2>
         <h2>${{price.price}}</h2>
         {% if user.is_authenticated %}
-            {% if closed %}
+            {% if not closed %}
                 <form action = "{% url 'bid' listing.id %}" method = "POST">
                     {% csrf_token %}
                         <label for = "bid">Place a bid higher than ${{price.price}} from {{price.bidder}}</label><br>
                         <input name = "bid" type = "number" placeholder = "{{price.price}}">
                         <button>Place Bid</button>
                 </form>
-        {% if request.user == user %}
+        {% if request.user == u %}
             <form action = "{% url 'close' listing.id %}" method = "POST">
                 {% csrf_token %}
                 <button>Close Auction</button>
             </form>
         {% endif %}
         {% endif %}
-        {% if not closed %}
+        {% if closed %}
         <strong>This auction has been closed.</strong>
         {% endif %}
 
