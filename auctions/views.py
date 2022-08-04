@@ -139,6 +139,8 @@ def bid(request, listing_id):
 
 def close(request, listing_id):
     if request.method == "POST":
-        Listing.objects.get(id=listing_id).closed = True
+        a = Listing.objects.get(id=listing_id)
+        a.closed = True
+        a.save()
         return HttpResponseRedirect(reverse("view_listing", kwargs = {'listing_id':listing_id}))
     return HttpResponseRedirect(reverse("view_listing", kwargs = {'listing_id':listing_id}))
